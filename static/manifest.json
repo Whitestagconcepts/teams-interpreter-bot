@@ -1,0 +1,81 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.11/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.11",
+    "version": "1.0.0",
+    "id": "62d4fd59-90c1-4662-8099-f8cb2a542020",
+    "packageName": "com.yourcompany.teamsinterpreterbot",
+    "developer": {
+        "name": "Your Company",
+        "websiteUrl": "https://stagsigns.net",
+        "privacyUrl": "https://stagsigns.net/privacy",
+        "termsOfUseUrl": "https://stagsigns.net/terms"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Interpreter Bot",
+        "full": "Teams Interpreter Bot"
+    },
+    "description": {
+        "short": "Bot for real-time translation and speech synthesis",
+        "full": "This bot provides real-time translation between languages and can convert text to speech during meetings."
+    },
+    "accentColor": "#FFFFFF",
+    "bots": [
+        {
+            "botId": "62d4fd59-90c1-4662-8099-f8cb2a542020",
+            "scopes": ["personal", "team", "groupchat"],
+            "supportsFiles": false,
+            "isNotificationOnly": false,
+            "supportsCalling": true,
+            "supportsVideo": true,
+            "commandLists": [
+                {
+                    "scopes": ["personal", "team", "groupchat"],
+                    "commands": [
+                        {
+                            "title": "help",
+                            "description": "Shows help information"
+                        },
+                        {
+                            "title": "languages",
+                            "description": "Shows supported languages"
+                        },
+                        {
+                            "title": "translate",
+                            "description": "Translates text to another language"
+                        },
+                        {
+                            "title": "speak",
+                            "description": "Converts text to speech"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers",
+        "calling"
+    ],
+    "validDomains": [
+        "stagsigns.net",
+        "*.stagsigns.net"
+    ],
+    "configurableTabs": [],
+    "staticTabs": [
+        {
+            "entityId": "conversations",
+            "name": "Conversations",
+            "contentUrl": "https://stagsigns.net/teams-bot/static/index.html",
+            "scopes": ["personal"]
+        }
+    ],
+    "webApplicationInfo": {
+        "id": "62d4fd59-90c1-4662-8099-f8cb2a542020",
+        "resource": "https://stagsigns.net"
+    }
+} 

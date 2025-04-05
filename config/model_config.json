@@ -1,0 +1,28 @@
+{
+  "asr": {
+    "engine": "whisper.cpp",
+    "model_path": "C:\\Users\\th31n\\AI ChatBot\\teams-interpreter-bot\\models\\asr\\ggml-tiny.en.bin",
+    "languages": {
+      "en-US": "english",
+      "ru-RU": "russian",
+      "es-CO": "spanish"
+    }
+  },
+  "translation": {
+    "engine": "nllb",
+    "model_path": "C:\\Users\\th31n\\AI ChatBot\\teams-interpreter-bot\\models\\translation\\nllb-200-distilled-600M",
+    "language_codes": {
+      "en-US": "eng_Latn",
+      "ru-RU": "rus_Cyrl",
+      "es-CO": "spa_Latn"
+    }
+  },
+  "tts": {
+    "engine": "piper",
+    "voices": {
+      "en-US": "C:\\Users\\th31n\\AI ChatBot\\teams-interpreter-bot\\models\\tts\\en_US-lessac-medium\\en_US-lessac-medium.onnx",
+      "ru-RU": "C:\\Users\\th31n\\AI ChatBot\\teams-interpreter-bot\\models\\tts\\ru_RU-irina-medium\\ru_RU-irina-medium.onnx",
+      "es-CO": "C:\\Users\\th31n\\AI ChatBot\\teams-interpreter-bot\\models\\tts\\es_LA-google-medium\\es_LA-google-medium.onnx"
+    }
+  }
+}

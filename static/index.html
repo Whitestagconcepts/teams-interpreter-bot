@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams Interpreter Bot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #252423;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #6264A7;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .feature {
+            flex: 1 1 300px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: white;
+        }
+        .feature h3 {
+            margin-top: 0;
+            color: #464775;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+        }
+        .language-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .language-tag {
+            background-color: #EDEDFD;
+            color: #6264A7;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teams Interpreter Bot</h1>
+        
+        <div class="card">
+            <p>Welcome to the Teams Interpreter Bot! This bot provides real-time translation and text-to-speech capabilities for your Microsoft Teams conversations.</p>
+        </div>
+        
+        <h2>Features</h2>
+        <div class="features">
+            <div class="feature">
+                <h3>Message Translation</h3>
+                <p>Send any message to the bot for instant translation between supported languages.</p>
+                <p>Example: <code>Hello, how are you today?</code></p>
+            </div>
+            
+            <div class="feature">
+                <h3>Text-to-Speech</h3>
+                <p>Convert text to natural-sounding speech in multiple languages.</p>
+                <p>Use the command: <code>/speak Hello everyone</code></p>
+            </div>
+            
+            <div class="feature">
+                <h3>Meeting Interpretation</h3>
+                <p>Add the bot to meetings for real-time interpretation.</p>
+                <p>(Coming soon)</p>
+            </div>
+        </div>
+        
+        <h2>Available Commands</h2>
+        <div class="card">
+            <ul>
+                <li><code>/help</code> - Display help information</li>
+                <li><code>/languages</code> - Show supported languages</li>
+                <li><code>/translate &lt;text&gt;</code> - Translate specific text</li>
+                <li><code>/speak &lt;text&gt;</code> - Convert text to speech</li>
+                <li><code>/call &lt;meeting-link&gt;</code> - Join a meeting (Coming soon)</li>
+            </ul>
+        </div>
+        
+        <h2>Supported Languages</h2>
+        <div class="language-list">
+            <div class="language-tag">English (en-US)</div>
+            <div class="language-tag">Spanish (es-CO)</div>
+            <div class="language-tag">Russian (ru-RU)</div>
+        </div>
+    </div>
+</body>
+</html> 

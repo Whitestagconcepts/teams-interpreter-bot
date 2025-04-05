@@ -1,283 +1,152 @@
 # Teams Interpreter Bot
 
-## Overview
+A bot for Microsoft Teams that provides real-time translation and text-to-speech capabilities.
 
-Teams Interpreter Bot provides real-time translation and text-to-speech capabilities for Microsoft Teams. This bot can translate messages between languages (currently supporting English, Spanish, and Russian) and generate speech from translated text.
+## Features
 
-## Repository Structure
-
-This repository contains the Python components of the bot that will be deployed to Replit:
-/
-├── app.py (Flask web server)
-├── teams_bot.py (Teams bot logic)
-├── calling_handler.py (Call handling code)
-├── requirements.txt (Python dependencies)
-├── .env.example (Sample environment variables - rename to .env)
-└── src/
-├── init.py (Empty file)
-├── tts/
-│ ├── init.py (Empty file)
-│ └── simple_tts.py (TTS implementation)
-└── translation/
-├── init.py (Empty file)
-└── simple_translator.py (Translator implementation)
-
+- Translate messages between languages (English, Spanish, Russian)
+- Convert text to speech using Windows TTS voices
+- Bot commands for easy interaction
+- Simple API for external integrations
 
 ## Setup Instructions
 
-### 1. Replit Setup (Python Backend)
+### Prerequisites
 
-1. **Create a Replit account** at [replit.com](https://replit.com) (free tier)
+- Python 3.9+ installed
+- Microsoft Azure account for Bot Registration
+- Microsoft Teams account with permissions to add custom apps
 
-2. **Import this repository**
-   - Click "Create Repl" > "Import from GitHub"
-   - Paste this repository URL
-   - Choose "Python" as the language
+### 1. Install Dependencies
 
-3. **Set up environment variables**
-   - In your Repl, click the lock icon (🔒) on the left sidebar
-   - Add these secrets:
-     - `MICROSOFT_APP_ID`: Your Bot's App ID
-     - `MICROSOFT_APP_PASSWORD`: Your Bot's App Password 
-     - `PORT`: 8000
+```bash
+pip install -r requirements.txt
+```
 
-4. **Install dependencies**
-   - Replit should automatically install dependencies from requirements.txt
-   - If not, run this in the Replit Shell: `pip install -r requirements.txt`
+### 2. Register a Bot in Azure
 
-5. **Run the project**
-   - Click the "Run" button
-   - Note your Replit URL (e.g., https://teams-interpreter-bot.yourusername.repl.co)
+1. Go to the [Azure Portal](https://portal.azure.com)
+2. Create a new "Bot Channels Registration" resource
+3. Fill in the required details:
+   - Name: TeamsInterpreterBot
+   - Messaging endpoint: The public URL where your bot will be hosted (we'll use ngrok for testing)
+   - Create a Microsoft App ID and password
+4. Save the App ID and password
 
-### 2. Hostinger Setup (PHP Proxy)
+### 3. Configure Environment Variables
 
-Create the following files on your Hostinger web hosting:
-
-1. **Directory structure**
+1. Open the `.env` file in the project root
+2. Add your Microsoft App ID and password:
    ```
-   /teams-bot/
-   ├── api_messages.php
-   ├── api_calls.php
-   ├── index.php
-   └── static/
-       ├── manifest.json
-       ├── color.png
-       └── outline.png
+   MICROSOFT_APP_ID=your-app-id
+   MICROSOFT_APP_PASSWORD=your-app-password
    ```
 
-2. **api_messages.php**
-   ```php
-   <?php
-   // Forward Teams messages to your Python hosting on Replit
-   header('Content-Type: application/json');
+### 4. Start the Translation Server
 
-   // Your Replit app URL - REPLACE WITH YOUR ACTUAL URL
-   $python_app_url = 'https://teams-interpreter-bot.yourusername.repl.co/api/messages';
+```bash
+python translation_tts_server.py
+```
 
-   // Get the request method
-   $method = $_SERVER['REQUEST_METHOD'];
+This starts the translation and TTS service on port 8080.
 
-   // Get headers
-   $headers = getallheaders();
-   $forward_headers = array();
-   foreach ($headers as $header => $value) {
-       if ($header != 'Host') {
-           $forward_headers[] = "$header: $value";
-       }
-   }
+### 5. Create a Public Endpoint (for development)
 
-   // Get request body
-   $request_body = file_get_contents('php://input');
+To expose your local bot to Microsoft Teams, you can use ngrok:
 
-   // Initialize cURL session
-   $ch = curl_init($python_app_url);
+```bash
+ngrok http 3978
+```
 
-   // Set cURL options
-   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-   curl_setopt($ch, CURLOPT_POSTFIELDS, $request_body);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-   curl_setopt($ch, CURLOPT_HTTPHEADER, $forward_headers);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+This will create a public URL like `https://abc123.ngrok.io` that forwards to your local server.
 
-   // Execute the request
-   $response = curl_exec($ch);
-   $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+### 6. Update the Messaging Endpoint
 
-   // Close cURL
-   curl_close($ch);
+1. Go back to your Bot registration in Azure
+2. Update the Messaging endpoint with your ngrok URL + `/api/messages`
+   (e.g., `https://abc123.ngrok.io/api/messages`)
 
-   // Return the response with status code
-   http_response_code($status_code);
-   echo $response;
+### 7. Update the Teams Manifest
+
+1. Open `static/manifest.json`
+2. Replace `YOUR_BOT_ID_HERE` with your Microsoft App ID
+3. Update `validDomains` to include your ngrok domain
+
+### 8. Start the Bot Server
+
+```bash
+python app.py
+```
+
+This starts the bot server on port 3978.
+
+### 9. Package and Upload to Teams
+
+1. Create a zip file containing:
+   - `manifest.json` (from the static folder)
+   - `color.png` and `outline.png` icons (you can use placeholder images for testing)
+2. In Microsoft Teams, go to "Apps" > "Manage your apps" > "Upload a custom app"
+3. Upload the zip file
+
+## Bot Commands
+
+- `/help` - Show help information
+- `/languages` - Show supported languages
+- `/translate <text>` - Translate text to another language
+- `/speak <text>` - Convert text to speech
+- `/call <meeting-link>` - Join a meeting (Coming soon)
+
+## Architecture
+
+The system consists of three main components:
+
+1. **Translation and TTS Server** - A Python HTTP server that handles translation and text-to-speech requests.
+2. **Teams Bot** - A Bot Framework application that integrates with Microsoft Teams for messaging.
+3. **Calling Handler** - Manages real-time media sessions for meeting interpretation.
+
+### Calling Features
+
+The bot now supports joining Teams meetings to provide real-time interpretation. This requires:
+
+1. The calling webhook configured in your bot registration
+2. Additional Graph API permissions for calling
+3. Proper Teams manifest settings with `supportsCalling` and `supportsVideo` enabled
+
+For full calling functionality, you'll need to:
+
+1. Configure your Bot Channel Registration with call capabilities
+2. Add `calls.accessMedia.all` and `calls.joinGroupCalls.all` permissions to your app registration
+3. Make sure your web server has the necessary endpoints to handle call events
+
+## Development
+
+### Running the Bot Locally
+
+1. Start the translation server:
+   ```
+   python translation_tts_server.py
    ```
 
-3. **api_calls.php**
-   ```php
-   <?php
-   // Forward Teams calling webhooks to your Python hosting on Replit
-   header('Content-Type: application/json');
-
-   // Your Replit app URL - REPLACE WITH YOUR ACTUAL URL
-   $python_app_url = 'https://teams-interpreter-bot.yourusername.repl.co/api/calls';
-
-   // Get the request method
-   $method = $_SERVER['REQUEST_METHOD'];
-
-   // Get headers
-   $headers = getallheaders();
-   $forward_headers = array();
-   foreach ($headers as $header => $value) {
-       if ($header != 'Host') {
-           $forward_headers[] = "$header: $value";
-       }
-   }
-
-   // Get request body
-   $request_body = file_get_contents('php://input');
-
-   // Initialize cURL session
-   $ch = curl_init($python_app_url);
-
-   // Set cURL options
-   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-   curl_setopt($ch, CURLOPT_POSTFIELDS, $request_body);
-   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-   curl_setopt($ch, CURLOPT_HTTPHEADER, $forward_headers);
-   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-   // Execute the request
-   $response = curl_exec($ch);
-   $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-   // Close cURL
-   curl_close($ch);
-
-   // Return the response with status code
-   http_response_code($status_code);
-   echo $response;
+2. In a separate terminal, start the bot server:
+   ```
+   python app.py
    ```
 
-4. **index.php**
-   ```php
-   <?php
-   echo "Teams Interpreter Bot Proxy is running!";
+3. Use ngrok to create a public URL:
+   ```
+   ngrok http 3978
    ```
 
-5. **static/manifest.json**
-   ```json
-   {
-       "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.11/MicrosoftTeams.schema.json",
-       "manifestVersion": "1.11",
-       "version": "1.0.0",
-       "id": "YOUR_BOT_ID_HERE",
-       "packageName": "com.yourcompany.teamsinterpreterbot",
-       "developer": {
-           "name": "Your Company",
-           "websiteUrl": "https://yourdomain.com",
-           "privacyUrl": "https://yourdomain.com/privacy",
-           "termsOfUseUrl": "https://yourdomain.com/terms"
-       },
-       "icons": {
-           "color": "color.png",
-           "outline": "outline.png"
-       },
-       "name": {
-           "short": "Interpreter Bot",
-           "full": "Teams Interpreter Bot"
-       },
-       "description": {
-           "short": "Bot for real-time translation and speech synthesis",
-           "full": "This bot provides real-time translation between languages and can convert text to speech during meetings."
-       },
-       "accentColor": "#FFFFFF",
-       "bots": [
-           {
-               "botId": "YOUR_BOT_ID_HERE",
-               "scopes": ["personal", "team", "groupchat"],
-               "supportsFiles": false,
-               "isNotificationOnly": false,
-               "supportsCalling": true,
-               "supportsVideo": true,
-               "commandLists": [
-                   {
-                       "scopes": ["personal", "team", "groupchat"],
-                       "commands": [
-                           {
-                               "title": "help",
-                               "description": "Shows help information"
-                           },
-                           {
-                               "title": "languages",
-                               "description": "Shows supported languages"
-                           },
-                           {
-                               "title": "translate",
-                               "description": "Translates text to another language"
-                           },
-                           {
-                               "title": "speak",
-                               "description": "Converts text to speech"
-                           }
-                       ]
-                   }
-               ]
-           }
-       ],
-       "permissions": [
-           "identity",
-           "messageTeamMembers",
-           "calling"
-       ],
-       "validDomains": [
-           "yourdomain.com",
-           "*.yourdomain.com",
-           "teams-interpreter-bot.yourusername.repl.co"
-       ]
-   }
-   ```
+### Troubleshooting
 
-### 3. Azure Bot Registration
-
-1. **Update Messaging Endpoint**
-   - In Azure Portal, find your Bot Channels Registration
-   - Set Messaging endpoint to: `https://yourdomain.com/teams-bot/api_messages.php`
-
-2. **Update Calling Webhook**
-   - In Channels > Microsoft Teams, enable Calling
-   - Set Calling webhook to: `https://yourdomain.com/teams-bot/api_calls.php`
-
-### 4. Teams App Package
-
-1. **Update manifest.json**
-   - Replace `YOUR_BOT_ID_HERE` with your actual Bot ID
-   - Update URLs to use your actual domain
-
-2. **Create app package**
-   - Zip together: manifest.json, color.png, outline.png
-   - Upload to Teams through "Apps" > "Manage your apps" > "Upload a custom app"
-
-## Functionality
-
-- **Translation**: Works between English, Spanish, and Russian
-- **Text-to-Speech**: Converts translated text to speech
-- **Bot Commands**:
-  - `/help` - Show help information
-  - `/languages` - Show supported languages
-  - `/translate <text>` - Translate specific text
-  - `/speak <text>` - Convert text to speech
-  - `/call <meeting-link>` - Join a meeting (Coming soon)
-
-## Troubleshooting
-
-- **Check Replit Logs**: If your bot isn't responding, check the Replit console for errors
-- **Check PHP Logs**: Look for errors in your Hostinger error logs
-- **Verify Endpoints**: Make sure your proxy URLs are correct in Azure Bot Registration
-- **Test Connectivity**: Try visiting https://yourdomain.com/teams-bot/ to see if the proxy is running
+- If the bot doesn't respond, check that your App ID and password are correct in the `.env` file.
+- If translations are not working, ensure the translation server is running on port 8080.
+- For TTS issues, ensure your Windows system has speech voices installed.
 
 ## License
 
-MIT License
+[MIT License](LICENSE)
 
 ## Credits
 
-Created by Your Name / Your Company.
+Created by Your Name / Your Company. 

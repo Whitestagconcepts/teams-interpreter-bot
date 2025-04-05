@@ -1,0 +1,115 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.14/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.14",
+  "version": "1.0.0",
+  "id": "{{BOT_ID}}",
+  "packageName": "com.teams.interpreter.bot",
+  "developer": {
+    "name": "Your Organization",
+    "websiteUrl": "https://yourdomain.com",
+    "privacyUrl": "https://yourdomain.com/privacy",
+    "termsOfUseUrl": "https://yourdomain.com/terms"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "Interpreter Bot",
+    "full": "Teams Interpreter Bot"
+  },
+  "description": {
+    "short": "Real-time translation for multilingual meetings",
+    "full": "This bot provides real-time translation between English, Russian, and Spanish during Microsoft Teams meetings, helping participants communicate effectively regardless of language barriers."
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [
+    {
+      "botId": "{{BOT_ID}}",
+      "scopes": [
+        "personal",
+        "team",
+        "groupchat"
+      ],
+      "supportsFiles": false,
+      "isNotificationOnly": false,
+      "commandLists": [
+        {
+          "scopes": [
+            "personal",
+            "team",
+            "groupchat"
+          ],
+          "commands": [
+            {
+              "title": "help",
+              "description": "Shows help information"
+            },
+            {
+              "title": "language",
+              "description": "Change your language preference"
+            },
+            {
+              "title": "status",
+              "description": "Check bot status"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "{{DOMAIN_NAME}}"
+  ],
+  "webApplicationInfo": {
+    "id": "{{APP_ID}}",
+    "resource": "https://graph.microsoft.com"
+  },
+  "meetingExtensionDefinition": {
+    "supportsStreaming": true,
+    "scenes": [
+      {
+        "id": "transcription",
+        "name": "Transcription",
+        "rolePermissions": [
+          {
+            "role": "organizer",
+            "permission": "read"
+          },
+          {
+            "role": "presenter",
+            "permission": "read"
+          },
+          {
+            "role": "attendee",
+            "permission": "read"
+          }
+        ],
+        "caption": "Shows real-time transcriptions and translations"
+      }
+    ],
+    "filters": [
+      {
+        "name": "language",
+        "values": [
+          {
+            "id": "en-US",
+            "title": "English"
+          },
+          {
+            "id": "ru-RU",
+            "title": "Russian"
+          },
+          {
+            "id": "es-CO",
+            "title": "Spanish"
+          }
+        ]
+      }
+    ]
+  }
+} 

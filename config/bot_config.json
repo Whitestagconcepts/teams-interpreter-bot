@@ -1,0 +1,44 @@
+{
+  "bot_id": "your-bot-id-here",
+  "bot_password": "your-bot-password-here",
+  "app_id": "your-teams-app-id-here",
+  "app_password": "your-teams-app-password-here",
+  "tenant_id": "your-tenant-id-here",
+  
+  "server": {
+    "host": "0.0.0.0",
+    "port": 3978,
+    "endpoint": "/api/messages"
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  },
+  
+  "application_insights": {
+    "instrumentation_key": ""
+  },
+  
+  "languages": {
+    "supported": ["en-US", "ru-RU", "es-CO"],
+    "default": "en-US"
+  },
+  
+  "meeting": {
+    "join_timeout_seconds": 30,
+    "retry_attempts": 3,
+    "initial_delay_seconds": 2
+  },
+  
+  "translation": {
+    "auto_detect_language": true,
+    "translate_only_when_language_differs": true
+  },
+  
+  "audio": {
+    "sample_rate": 16000,
+    "mono": true,
+    "pcm_bit_depth": 16
+  }
+} 
